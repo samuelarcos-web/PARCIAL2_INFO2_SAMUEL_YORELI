@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from io import StringIO
 import numpy as np
 from scipy.io import loadmat, whosmat
+import os
 
 
 def suma(a, b, c, d):
@@ -157,6 +158,8 @@ class ArchivoCSV:
         nombre = (
             f"graficos_condicion_{condicion}.png"
         )
+
+        os.makedirs("graficos", exist_ok=True)
 
         plt.savefig(f"graficos/{nombre}", dpi=300)
 
@@ -344,6 +347,8 @@ class ArchivoMAT:
             f"MAT_{nombre_operacion}_epoca_{epoca}.png"
         )
 
+        os.makedirs("graficos", exist_ok=True)
+
         plt.savefig(
             nombre_archivo,
             dpi=300
@@ -417,6 +422,8 @@ class ArchivoMAT:
             f"graficos/"
             f"MAT_estadisticas_ejes_{eje1}_{eje2}.png"
         )
+
+        os.makedirs("graficos", exist_ok=True)
 
         plt.savefig(
             nombre_archivo,

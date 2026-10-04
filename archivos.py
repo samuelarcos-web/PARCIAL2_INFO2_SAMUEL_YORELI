@@ -1,3 +1,5 @@
+import os
+
 from clases import (
     ArchivoCSV,
     ArchivoMAT,
@@ -53,21 +55,25 @@ while True:
     elif opcion == 1:
 
         ruta = input(
-            "\nIngrese la ruta del archivo CSV: "
+        "\nIngrese la ruta del archivo CSV: "
         ).strip()
 
-        try:
-            archivo_csv = ArchivoCSV(ruta)
+        if not os.path.exists(ruta):
+            print("\nLa ruta indicada no existe.")
 
-            print(
-                "\nArchivo CSV cargado correctamente."
-            )
+        else:
+            try:
+                archivo_csv = ArchivoCSV(ruta)
 
-        except Exception as error:
-            print(
-                "\nError al cargar el archivo:",
-                error
-            )
+                print(
+                    "\nArchivo CSV cargado correctamente."
+                )
+
+            except Exception as error:
+                print(
+                    "\nError al cargar el archivo:",
+                    error
+                )
 
     # INFORMACIÓN CSV
     elif opcion == 2:
@@ -198,21 +204,25 @@ while True:
     elif opcion == 6:
 
         ruta = input(
-            "\nIngrese la ruta del archivo MAT: "
+        "\nIngrese la ruta del archivo MAT: "
         ).strip()
 
-        try:
-            archivo_mat = ArchivoMAT(ruta)
+        if not os.path.exists(ruta):
+            print("\nLa ruta indicada no existe.")
 
-            print(
-                "\nArchivo MAT cargado correctamente."
-            )
+        else:
+            try:
+                archivo_mat = ArchivoMAT(ruta)
 
-        except Exception as error:
-            print(
-                "\nError al cargar el archivo:",
-                error
-            )
+                print(
+                    "\nArchivo MAT cargado correctamente."
+                )
+
+            except Exception as error:
+                print(
+                    "\nError al cargar el archivo:",
+                    error
+                )
 
     # INFORMACIÓN MAT
     elif opcion == 7:

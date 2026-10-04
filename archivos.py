@@ -37,15 +37,18 @@ def mostrar_menu():
     print("8. Operar cuatro canales")
     print("9. Estadísticas de matriz 3D")
 
+    print("\nGESTOR DE OBJETOS")
+    print("10. Listar objetos almacenados")
+    print("11. Buscar objeto por nombre")
+    print("12. Activar objeto almacenado")
+
     print("\n0. Salir")
 
     print("\nEjemplos de rutas:")
     print("CSV: datos/Arch_CSV/ERP_01.csv")
     print("MAT: datos/Archs_MAT/Sensitive_Cue.mat")
 
-    print("\nGESTOR DE OBJETOS")
-    print("10. Listar objetos almacenados")
-    print("11. Buscar objeto por nombre")
+    
 
 def seleccionar_archivo(carpeta, extension):
 
@@ -85,7 +88,7 @@ while True:
     opcion = validar_entero(
         "\nSeleccione una opción: ",
         0,
-        11
+        12
     )
 
     # ==========================================
@@ -493,3 +496,48 @@ while True:
             print("Tipo:", type(objeto).__name__)
             print("\nInformación:")
             print(objeto)
+
+    elif opcion == 12:
+
+        nombres = gestor.listar()
+
+        if not nombres:
+            print("\nNo hay objetos almacenados.")
+
+        else:
+            print("\nObjetos disponibles:")
+
+            for i, nombre in enumerate(nombres, start=1):
+                print(f"{i}. {nombre}")
+
+            seleccion = validar_entero(
+                "Seleccione un objeto: ",
+                1,
+                len(nombres)
+            )
+
+            nombre_seleccionado = nombres[seleccion - 1]
+
+            objeto = gestor.buscar(nombre_seleccionado)
+
+            if isinstance(objeto, ArchivoCSV):
+
+                archivo_csv = objeto
+
+                print(
+                    f"\nCSV activo: {nombre_seleccionado}"
+                )
+
+            elif isinstance(objeto, ArchivoMAT):
+
+                archivo_mat = objeto
+
+                print(
+                    f"\nMAT activo: {nombre_seleccionado}"
+                )
+
+            else:
+                print(
+                    "\nEl objeto almacenado no corresponde "
+                    "a un tipo reconocido."
+                )

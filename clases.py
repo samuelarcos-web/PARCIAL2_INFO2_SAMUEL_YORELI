@@ -17,58 +17,40 @@ def validar_entero(mensaje, minimo=None, maximo=None):
     while True:
 
         try:
-            valor = int(
-                input(mensaje)
-            )
+            valor = int(input(mensaje))
 
-            if (
-                minimo is not None
-                and valor < minimo
-            ):
+            if minimo is not None and valor < minimo:
                 print(
-                    f"El valor debe ser mayor "
-                    f"o igual a {minimo}."
+                    f"El valor debe ser mayor o igual a {minimo}."
                 )
                 continue
 
-            if (
-                maximo is not None
-                and valor > maximo
-            ):
+            if maximo is not None and valor > maximo:
                 print(
-                    f"El valor debe ser menor "
-                    f"o igual a {maximo}."
+                    f"El valor debe ser menor o igual a {maximo}."
                 )
                 continue
 
             return valor
 
         except ValueError:
-
             print(
                 "Entrada inválida. "
                 "Debe ingresar un número entero."
             )
 
 
-def validar_opcion(
-    mensaje,
-    opciones_validas
-):
+def validar_opcion(mensaje, opciones_validas):
 
     while True:
 
-        opcion = input(
-            mensaje
-        ).strip()
+        opcion = input(mensaje).strip()
 
         if opcion in opciones_validas:
-
             return opcion
 
         print(
-            "Opción inválida. "
-            "Opciones permitidas:",
+            "Opción inválida. Opciones permitidas:",
             ", ".join(opciones_validas)
         )
 
@@ -80,20 +62,14 @@ def validar_canal_lista(
 
     while True:
 
-        canal = input(
-            mensaje
-        ).strip()
+        canal = input(mensaje).strip()
 
         if canal in canales_disponibles:
-
             return canal
 
         print(
-            "Canal inválido. "
-            "Canales disponibles:",
-            ", ".join(
-                canales_disponibles
-            )
+            "Canal inválido. Canales disponibles:",
+            ", ".join(canales_disponibles)
         )
 
 
@@ -102,33 +78,15 @@ def validar_canal_lista(
 # =========================================================
 
 def suma(a, b, c, d):
-
-    return (
-        a
-        + b
-        + c
-        + d
-    )
+    return a + b + c + d
 
 
 def resta(a, b, c, d):
-
-    return (
-        a
-        - b
-        - c
-        - d
-    )
+    return a - b - c - d
 
 
 def multiplicacion(a, b, c, d):
-
-    return (
-        a
-        * b
-        * c
-        * d
-    )
+    return a * b * c * d
 
 
 # =========================================================
@@ -138,20 +96,14 @@ def multiplicacion(a, b, c, d):
 class GestorArchivos:
 
     def __init__(self):
-
         self.objetos = {}
-
 
     def agregar(
         self,
         nombre,
         objeto
     ):
-
-        self.objetos[
-            nombre
-        ] = objeto
-
+        self.objetos[nombre] = objeto
 
     def buscar(
         self,
@@ -159,41 +111,24 @@ class GestorArchivos:
     ):
 
         if nombre in self.objetos:
-
-            return self.objetos[
-                nombre
-            ]
+            return self.objetos[nombre]
 
         return None
 
-
     def listar(self):
-
         return list(
             self.objetos.keys()
         )
 
-
     def __str__(self):
 
         if not self.objetos:
+            return "No hay objetos almacenados."
 
-            return (
-                "No hay objetos almacenados."
-            )
+        texto = "OBJETOS ALMACENADOS\n"
+        texto += "-" * 30 + "\n"
 
-        texto = (
-            "OBJETOS ALMACENADOS\n"
-        )
-
-        texto += (
-            "-" * 30
-            + "\n"
-        )
-
-        for nombre, objeto in (
-            self.objetos.items()
-        ):
+        for nombre, objeto in self.objetos.items():
 
             texto += (
                 f"{nombre} -> "
@@ -216,14 +151,20 @@ class ArchivoCSV:
 
         self.ruta = ruta
 
+        # Validar extensión
+        if not ruta.lower().endswith(".csv"):
+
+            raise ValueError(
+                "El archivo seleccionado "
+                "debe tener extensión .csv"
+            )
+
         self.datos = pd.read_csv(
             ruta
         )
 
-        if (
-            "time_ms"
-            in self.datos.columns
-        ):
+        # Convertir el tiempo en índice
+        if "time_ms" in self.datos.columns:
 
             self.datos.set_index(
                 "time_ms",
@@ -243,9 +184,7 @@ class ArchivoCSV:
             buf=buffer
         )
 
-        informacion = (
-            buffer.getvalue()
-        )
+        informacion = buffer.getvalue()
 
         descripcion = (
             self.datos
@@ -274,10 +213,8 @@ class ArchivoCSV:
 
         canales = [
             columna
-            for columna
-            in self.datos.columns
-            if columna
-            not in columnas_no_canales
+            for columna in self.datos.columns
+            if columna not in columnas_no_canales
         ]
 
         return canales
@@ -296,46 +233,37 @@ class ArchivoCSV:
         canal_y
     ):
 
-        datos_condicion = (
-            self.datos[
-                self.datos[
-                    "condition"
-                ]
-                == condicion
-            ]
-        )
+        datos_condicion = self.datos[
+            self.datos["condition"]
+            == condicion
+        ]
 
         if datos_condicion.empty:
 
             raise ValueError(
-                "No existen datos "
-                "para la condición seleccionada."
+                "No existen datos para "
+                "la condición seleccionada."
             )
 
         fig = plt.figure(
             figsize=(12, 8)
         )
 
-        # ---------------------------------------------
-        # Distribución de subplots:
-        #
-        # STEM ocupa la parte superior completa
-        # Histograma abajo izquierda
-        # Scatter abajo derecha
-        # ---------------------------------------------
-
+        # Stem ocupa toda la parte superior
         ax1 = plt.subplot(
             2,
             2,
             (1, 2)
         )
 
+        # Histograma abajo izquierda
         ax2 = plt.subplot(
             2,
             2,
             3
         )
 
+        # Scatter abajo derecha
         ax3 = plt.subplot(
             2,
             2,
@@ -349,9 +277,7 @@ class ArchivoCSV:
 
         ax1.stem(
             datos_condicion.index,
-            datos_condicion[
-                canal_stem
-            ]
+            datos_condicion[canal_stem]
         )
 
         ax1.axvline(
@@ -378,15 +304,12 @@ class ArchivoCSV:
         # ---------------------------------------------
 
         ax2.hist(
-            datos_condicion[
-                canal_hist
-            ],
+            datos_condicion[canal_hist],
             bins=30
         )
 
         ax2.set_title(
-            f"Histograma de "
-            f"{canal_hist}"
+            f"Histograma de {canal_hist}"
         )
 
         ax2.set_xlabel(
@@ -403,17 +326,12 @@ class ArchivoCSV:
         # ---------------------------------------------
 
         ax3.scatter(
-            datos_condicion[
-                canal_x
-            ],
-            datos_condicion[
-                canal_y
-            ]
+            datos_condicion[canal_x],
+            datos_condicion[canal_y]
         )
 
         ax3.set_title(
-            f"{canal_x} vs "
-            f"{canal_y}"
+            f"{canal_x} vs {canal_y}"
         )
 
         ax3.set_xlabel(
@@ -436,18 +354,15 @@ class ArchivoCSV:
             exist_ok=True
         )
 
-        nombre_base = (
-            os.path.splitext(
-                os.path.basename(
-                    self.ruta
-                )
-            )[0]
-        )
+        nombre_base = os.path.splitext(
+            os.path.basename(
+                self.ruta
+            )
+        )[0]
 
         nombre = (
-            f"{nombre_base}"
-            f"_condicion_"
-            f"{condicion}.png"
+            f"{nombre_base}_"
+            f"condicion_{condicion}.png"
         )
 
         plt.savefig(
@@ -471,44 +386,34 @@ class ArchivoCSV:
         if canal_izquierdo not in self.datos.columns:
 
             raise ValueError(
-                f"El canal "
-                f"{canal_izquierdo} "
-                f"no existe."
+                f"El canal {canal_izquierdo} "
+                "no existe."
             )
 
         if canal_derecho not in self.datos.columns:
 
             raise ValueError(
-                f"El canal "
-                f"{canal_derecho} "
-                f"no existe."
+                f"El canal {canal_derecho} "
+                "no existe."
             )
 
-        if (
-            canal_izquierdo
-            == canal_derecho
-        ):
+        if canal_izquierdo == canal_derecho:
 
             raise ValueError(
-                "Los canales deben "
-                "ser diferentes."
+                "Los canales deben ser diferentes."
             )
 
         nombre_columna = (
-            f"{canal_izquierdo}"
-            f"_{canal_derecho}"
+            f"{canal_izquierdo}_"
+            f"{canal_derecho}"
         )
 
         self.datos[
             nombre_columna
         ] = (
-            self.datos[
-                canal_izquierdo
-            ]
+            self.datos[canal_izquierdo]
             -
-            self.datos[
-                canal_derecho
-            ]
+            self.datos[canal_derecho]
         )
 
         return self.datos[
@@ -533,67 +438,59 @@ class ArchivoMAT:
 
         self.ruta = ruta
 
-        # Información de las variables
-        # contenidas en el archivo MAT
+        # Validar extensión
+        if not ruta.lower().endswith(".mat"):
+
+            raise ValueError(
+                "El archivo seleccionado "
+                "debe tener extensión .mat"
+            )
+
+        # Información del archivo mediante whosmat
         self.variables = whosmat(
             ruta
         )
 
-        # Carga completa del archivo
+        # Cargar contenido completo
         contenido = loadmat(
             ruta
         )
 
-        # MATLAB agrega algunas llaves internas
-        # que comienzan con "__".
-        # Estas se eliminan.
+        # Eliminar llaves internas de MATLAB
         llaves = [
             llave
-            for llave
-            in contenido.keys()
-            if not llave.startswith(
-                "__"
-            )
+            for llave in contenido.keys()
+            if not llave.startswith("__")
         ]
 
         if len(llaves) == 0:
 
             raise ValueError(
-                "El archivo MAT "
-                "no contiene variables válidas."
+                "El archivo MAT no contiene "
+                "variables válidas."
             )
 
-        # Trabajamos con la primera
-        # variable útil encontrada
-        self.nombre_variable = (
-            llaves[0]
-        )
+        # Primera variable útil
+        self.nombre_variable = llaves[0]
 
-        # Se mantiene la matriz 3D
-        # original sin modificar
-        self.matriz_original = (
-            contenido[
-                self.nombre_variable
-            ]
-        )
+        # Matriz 3D original
+        self.matriz_original = contenido[
+            self.nombre_variable
+        ]
 
-        if (
-            self.matriz_original.ndim
-            != 3
-        ):
+        if self.matriz_original.ndim != 3:
 
             raise ValueError(
-                "La matriz principal "
-                "debe tener tres dimensiones."
+                "La matriz principal debe "
+                "tener tres dimensiones."
             )
 
-        # Frecuencia de muestreo
-        # especificada en el parcial
+        # Frecuencia dada por el parcial
         self.frecuencia_muestreo = 250
 
 
     # -----------------------------------------------------
-    # INFORMACIÓN MAT MEDIANTE WHOSMAT
+    # INFORMACIÓN MAT
     # -----------------------------------------------------
 
     def __str__(self):
@@ -603,8 +500,7 @@ class ArchivoMAT:
         )
 
         texto += (
-            f"Archivo: "
-            f"{self.ruta}\n\n"
+            f"Archivo: {self.ruta}\n\n"
         )
 
         texto += (
@@ -634,7 +530,7 @@ class ArchivoMAT:
 
 
     # -----------------------------------------------------
-    # OPERACIONES SOBRE 4 CANALES
+    # OPERACIONES CON 4 CANALES
     # -----------------------------------------------------
 
     def operar_canales(
@@ -646,14 +542,21 @@ class ArchivoMAT:
         epoca=0
     ):
 
-        # Validar cantidad de canales
+        # Deben ser 4 canales
         if len(canales) != 4:
 
             raise ValueError(
-                "Debe seleccionar "
-                "exactamente 4 canales."
+                "Debe seleccionar exactamente "
+                "4 canales."
             )
 
+        # Los canales deben ser diferentes
+        if len(set(canales)) != 4:
+
+            raise ValueError(
+                "Los cuatro canales seleccionados "
+                "deben ser diferentes."
+            )
 
         # Validar época
         if (
@@ -667,23 +570,18 @@ class ArchivoMAT:
                 "está fuera de rango."
             )
 
-
         # ---------------------------------------------
-        # Conversión de matriz 3D a 2D
-        # tomando una época determinada
+        # CONVERTIR MATRIZ 3D A 2D
         # ---------------------------------------------
 
-        matriz_2d = (
-            self.matriz_original[
-                :,
-                :,
-                epoca
-            ]
-        )
-
+        matriz_2d = self.matriz_original[
+            :,
+            :,
+            epoca
+        ]
 
         # ---------------------------------------------
-        # VALIDACIÓN DE RANGO
+        # VALIDAR RANGO
         # ---------------------------------------------
 
         if (
@@ -693,20 +591,19 @@ class ArchivoMAT:
         ):
 
             raise ValueError(
-                "El rango de muestras "
-                "está fuera de los límites."
+                "El rango de muestras está "
+                "fuera de los límites."
             )
 
         if punto_min >= punto_max:
 
             raise ValueError(
-                "El punto mínimo debe "
-                "ser menor al punto máximo."
+                "El punto mínimo debe ser "
+                "menor al punto máximo."
             )
 
-
         # ---------------------------------------------
-        # VALIDACIÓN DE CANALES
+        # VALIDAR CANALES
         # ---------------------------------------------
 
         for canal in canales:
@@ -719,12 +616,11 @@ class ArchivoMAT:
 
                 raise ValueError(
                     f"El canal {canal} "
-                    f"está fuera de rango."
+                    "está fuera de rango."
                 )
 
-
         # ---------------------------------------------
-        # EXTRAER DATOS DE LOS 4 CANALES
+        # EXTRAER DATOS
         # ---------------------------------------------
 
         datos = matriz_2d[
@@ -732,9 +628,8 @@ class ArchivoMAT:
             punto_min:punto_max
         ]
 
-
         # ---------------------------------------------
-        # APLICAR FUNCIÓN
+        # APLICAR OPERACIÓN
         # ---------------------------------------------
 
         resultado = funcion(
@@ -744,9 +639,8 @@ class ArchivoMAT:
             datos[3]
         )
 
-
         # ---------------------------------------------
-        # CONVERTIR MUESTRAS A SEGUNDOS
+        # CONVERSIÓN DE MUESTRAS A SEGUNDOS
         # ---------------------------------------------
 
         tiempo = (
@@ -757,7 +651,6 @@ class ArchivoMAT:
             /
             self.frecuencia_muestreo
         )
-
 
         # ---------------------------------------------
         # CREAR SUBPLOTS
@@ -772,10 +665,9 @@ class ArchivoMAT:
             figsize=(12, 8)
         )
 
-
         # ---------------------------------------------
         # PRIMER SUBPLOT:
-        # LOS CUATRO CANALES
+        # 4 CANALES
         # ---------------------------------------------
 
         for i, canal in enumerate(
@@ -807,15 +699,12 @@ class ArchivoMAT:
             True
         )
 
-
         # ---------------------------------------------
         # SEGUNDO SUBPLOT:
-        # RESULTADO
+        # RESULTADO DE LA OPERACIÓN
         # ---------------------------------------------
 
-        nombre_operacion = (
-            funcion.__name__
-        )
+        nombre_operacion = funcion.__name__
 
         ax2.plot(
             tiempo,
@@ -842,7 +731,6 @@ class ArchivoMAT:
             True
         )
 
-
         # ---------------------------------------------
         # GUARDAR GRÁFICO
         # ---------------------------------------------
@@ -854,13 +742,11 @@ class ArchivoMAT:
             exist_ok=True
         )
 
-        nombre_base = (
-            os.path.splitext(
-                os.path.basename(
-                    self.ruta
-                )
-            )[0]
-        )
+        nombre_base = os.path.splitext(
+            os.path.basename(
+                self.ruta
+            )
+        )[0]
 
         nombre_archivo = (
             f"graficos/"
@@ -880,7 +766,7 @@ class ArchivoMAT:
 
 
     # -----------------------------------------------------
-    # PROMEDIO Y DESVIACIÓN ESTÁNDAR SOBRE MATRIZ 3D
+    # ESTADÍSTICAS SOBRE MATRIZ 3D ORIGINAL
     # -----------------------------------------------------
 
     def estadisticas_3d(
@@ -897,13 +783,11 @@ class ArchivoMAT:
 
         if (
             eje1 not in ejes_validos
-            or eje2
-            not in ejes_validos
+            or eje2 not in ejes_validos
         ):
 
             raise ValueError(
-                "Los ejes deben ser "
-                "0, 1 o 2."
+                "Los ejes deben ser 0, 1 o 2."
             )
 
         if eje1 == eje2:
@@ -913,9 +797,8 @@ class ArchivoMAT:
                 "dos ejes diferentes."
             )
 
-
         # ---------------------------------------------
-        # CÁLCULOS SOBRE LA MATRIZ 3D ORIGINAL
+        # PROMEDIO
         # ---------------------------------------------
 
         promedio = np.mean(
@@ -926,6 +809,10 @@ class ArchivoMAT:
             )
         )
 
+        # ---------------------------------------------
+        # DESVIACIÓN ESTÁNDAR
+        # ---------------------------------------------
+
         desviacion = np.std(
             self.matriz_original,
             axis=(
@@ -934,9 +821,8 @@ class ArchivoMAT:
             )
         )
 
-
         # ---------------------------------------------
-        # MOSTRAR FORMAS RESULTANTES
+        # MOSTRAR FORMAS
         # ---------------------------------------------
 
         print(
@@ -948,7 +834,6 @@ class ArchivoMAT:
             "Forma del vector de desviación estándar:",
             desviacion.shape
         )
-
 
         # ---------------------------------------------
         # BOXPLOTS
@@ -982,7 +867,6 @@ class ArchivoMAT:
             True
         )
 
-
         # ---------------------------------------------
         # GUARDAR GRÁFICO
         # ---------------------------------------------
@@ -994,13 +878,11 @@ class ArchivoMAT:
             exist_ok=True
         )
 
-        nombre_base = (
-            os.path.splitext(
-                os.path.basename(
-                    self.ruta
-                )
-            )[0]
-        )
+        nombre_base = os.path.splitext(
+            os.path.basename(
+                self.ruta
+            )
+        )[0]
 
         nombre_archivo = (
             f"graficos/"

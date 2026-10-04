@@ -13,13 +13,60 @@ from clases import (
 )
 
 
+# =========================================================
+# OBJETOS ACTIVOS
+# =========================================================
+
 archivo_csv = None
 archivo_mat = None
 
 gestor = GestorArchivos()
 
 
+# =========================================================
+# SELECCIÓN AUTOMÁTICA DE ARCHIVOS
+# =========================================================
+
+def seleccionar_archivo(carpeta, extension):
+
+    archivos = sorted([
+        archivo
+        for archivo in os.listdir(carpeta)
+        if archivo.lower().endswith(extension.lower())
+    ])
+
+    if not archivos:
+        print(
+            f"\nNo se encontraron archivos {extension} "
+            f"en la carpeta {carpeta}."
+        )
+        return None
+
+    print("\nArchivos disponibles:")
+
+    for i, archivo in enumerate(archivos, start=1):
+        print(f"{i}. {archivo}")
+
+    opcion = validar_entero(
+        "Seleccione un archivo: ",
+        1,
+        len(archivos)
+    )
+
+    archivo_seleccionado = archivos[opcion - 1]
+
+    return os.path.join(
+        carpeta,
+        archivo_seleccionado
+    )
+
+
+# =========================================================
+# MENÚ PRINCIPAL
+# =========================================================
+
 def mostrar_menu():
+
     print("\n" + "=" * 55)
     print("        SISTEMA DE PROCESAMIENTO EEG / ERP")
     print("=" * 55)
@@ -44,42 +91,14 @@ def mostrar_menu():
 
     print("\n0. Salir")
 
-    print("\nEjemplos de rutas:")
-    print("CSV: datos/Arch_CSV/ERP_01.csv")
-    print("MAT: datos/Archs_MAT/Sensitive_Cue.mat")
+    print("\nUbicación de los datos:")
+    print("CSV: datos/Arch_CSV/")
+    print("MAT: datos/Archs_MAT/")
 
-    
 
-def seleccionar_archivo(carpeta, extension):
-
-    archivos = [
-        archivo
-        for archivo in os.listdir(carpeta)
-        if archivo.lower().endswith(extension.lower())
-    ]
-
-    if not archivos:
-        print(f"\nNo se encontraron archivos {extension} en {carpeta}.")
-        return None
-
-    print("\nArchivos disponibles:")
-
-    for i, archivo in enumerate(archivos, start=1):
-        print(f"{i}. {archivo}")
-
-    opcion = validar_entero(
-        "Seleccione un archivo: ",
-        1,
-        len(archivos)
-    )
-
-    archivo_seleccionado = archivos[opcion - 1]
-
-    return os.path.join(
-        carpeta,
-        archivo_seleccionado
-    )
-
+# =========================================================
+# PROGRAMA PRINCIPAL
+# =========================================================
 
 while True:
 
@@ -91,18 +110,19 @@ while True:
         12
     )
 
-    # ==========================================
-    # SALIR
-    # ==========================================
+    # =====================================================
+    # 0. SALIR
+    # =====================================================
 
     if opcion == 0:
+
         print("\nPrograma finalizado correctamente.")
         print("Gracias por utilizar el sistema EEG / ERP.")
         break
 
-    # ==========================================
-    # CARGAR CSV
-    # ==========================================
+    # =====================================================
+    # 1. CARGAR CSV
+    # =====================================================
 
     elif opcion == 1:
 
@@ -117,11 +137,14 @@ while True:
                 archivo_csv = ArchivoCSV(ruta)
 
                 nombre = os.path.basename(ruta)
-                gestor.agregar(nombre, archivo_csv)
 
-                print(
-                    "\nArchivo CSV cargado correctamente."
+                gestor.agregar(
+                    nombre,
+                    archivo_csv
                 )
+
+                print("\nArchivo CSV cargado correctamente.")
+                print("Archivo activo:", nombre)
 
             except Exception as error:
                 print(
@@ -129,9 +152,9 @@ while True:
                     error
                 )
 
-    # ==========================================
-    # INFORMACIÓN CSV
-    # ==========================================
+    # =====================================================
+    # 2. INFORMACIÓN CSV
+    # =====================================================
 
     elif opcion == 2:
 
@@ -139,13 +162,12 @@ while True:
             print(
                 "\nPrimero debe cargar un archivo CSV."
             )
-
         else:
             print(archivo_csv)
 
-    # ==========================================
-    # MOSTRAR CANALES CSV
-    # ==========================================
+    # =====================================================
+    # 3. MOSTRAR CANALES CSV
+    # =====================================================
 
     elif opcion == 3:
 
@@ -155,14 +177,15 @@ while True:
             )
 
         else:
+
             print("\nCanales disponibles:")
 
             for canal in archivo_csv.mostrar_canales():
                 print("-", canal)
 
-    # ==========================================
-    # GRÁFICOS CSV
-    # ==========================================
+    # =====================================================
+    # 4. GRÁFICOS CSV
+    # =====================================================
 
     elif opcion == 4:
 
@@ -219,9 +242,9 @@ while True:
                     error
                 )
 
-    # ==========================================
-    # DIFERENCIA INTERHEMISFÉRICA
-    # ==========================================
+    # =====================================================
+    # 5. DIFERENCIA INTERHEMISFÉRICA
+    # =====================================================
 
     elif opcion == 5:
 
@@ -248,6 +271,7 @@ while True:
             )
 
             if canal_izquierdo == canal_derecho:
+
                 print(
                     "\nDebe seleccionar dos canales diferentes."
                 )
@@ -272,9 +296,9 @@ while True:
                         error
                     )
 
-    # ==========================================
-    # CARGAR MAT
-    # ==========================================
+    # =====================================================
+    # 6. CARGAR MAT
+    # =====================================================
 
     elif opcion == 6:
 
@@ -289,11 +313,14 @@ while True:
                 archivo_mat = ArchivoMAT(ruta)
 
                 nombre = os.path.basename(ruta)
-                gestor.agregar(nombre, archivo_mat)
 
-                print(
-                    "\nArchivo MAT cargado correctamente."
+                gestor.agregar(
+                    nombre,
+                    archivo_mat
                 )
+
+                print("\nArchivo MAT cargado correctamente.")
+                print("Archivo activo:", nombre)
 
             except Exception as error:
                 print(
@@ -301,9 +328,9 @@ while True:
                     error
                 )
 
-    # ==========================================
-    # INFORMACIÓN MAT
-    # ==========================================
+    # =====================================================
+    # 7. INFORMACIÓN MAT
+    # =====================================================
 
     elif opcion == 7:
 
@@ -311,13 +338,12 @@ while True:
             print(
                 "\nPrimero debe cargar un archivo MAT."
             )
-
         else:
             print(archivo_mat)
 
-    # ==========================================
-    # OPERACIONES CON 4 CANALES MAT
-    # ==========================================
+    # =====================================================
+    # 8. OPERACIONES CON 4 CANALES MAT
+    # =====================================================
 
     elif opcion == 8:
 
@@ -401,7 +427,6 @@ while True:
                 }
 
                 try:
-
                     archivo_mat.operar_canales(
                         funciones[operacion],
                         canales,
@@ -416,9 +441,9 @@ while True:
                         error
                     )
 
-    # ==========================================
-    # ESTADÍSTICAS MATRIZ 3D
-    # ==========================================
+    # =====================================================
+    # 9. ESTADÍSTICAS MATRIZ 3D
+    # =====================================================
 
     elif opcion == 9:
 
@@ -454,7 +479,6 @@ while True:
             else:
 
                 try:
-
                     archivo_mat.estadisticas_3d(
                         eje1,
                         eje2
@@ -466,18 +490,19 @@ while True:
                         error
                     )
 
-    # ==========================================
-    # LISTAR OBJETOS ALMACENADOS
-    # ==========================================
+    # =====================================================
+    # 10. LISTAR OBJETOS
+    # =====================================================
 
     elif opcion == 10:
 
-        print("\n" + str(gestor))
+        print(
+            "\n" + str(gestor)
+        )
 
-
-    # ==========================================
-    # BUSCAR OBJETO
-    # ==========================================
+    # =====================================================
+    # 11. BUSCAR OBJETO
+    # =====================================================
 
     elif opcion == 11:
 
@@ -488,27 +513,46 @@ while True:
         objeto = gestor.buscar(nombre)
 
         if objeto is None:
-            print("\nNo se encontró un objeto con ese nombre.")
+
+            print(
+                "\nNo se encontró un objeto "
+                "con ese nombre."
+            )
 
         else:
+
             print("\nObjeto encontrado:")
             print("Nombre:", nombre)
             print("Tipo:", type(objeto).__name__)
+
             print("\nInformación:")
             print(objeto)
+
+    # =====================================================
+    # 12. ACTIVAR OBJETO ALMACENADO
+    # =====================================================
 
     elif opcion == 12:
 
         nombres = gestor.listar()
 
         if not nombres:
-            print("\nNo hay objetos almacenados.")
+
+            print(
+                "\nNo hay objetos almacenados."
+            )
 
         else:
+
             print("\nObjetos disponibles:")
 
-            for i, nombre in enumerate(nombres, start=1):
-                print(f"{i}. {nombre}")
+            for i, nombre in enumerate(
+                nombres,
+                start=1
+            ):
+                print(
+                    f"{i}. {nombre}"
+                )
 
             seleccion = validar_entero(
                 "Seleccione un objeto: ",
@@ -516,28 +560,43 @@ while True:
                 len(nombres)
             )
 
-            nombre_seleccionado = nombres[seleccion - 1]
+            nombre_seleccionado = (
+                nombres[
+                    seleccion - 1
+                ]
+            )
 
-            objeto = gestor.buscar(nombre_seleccionado)
+            objeto = gestor.buscar(
+                nombre_seleccionado
+            )
 
-            if isinstance(objeto, ArchivoCSV):
+            if isinstance(
+                objeto,
+                ArchivoCSV
+            ):
 
                 archivo_csv = objeto
 
                 print(
-                    f"\nCSV activo: {nombre_seleccionado}"
+                    f"\nCSV activo: "
+                    f"{nombre_seleccionado}"
                 )
 
-            elif isinstance(objeto, ArchivoMAT):
+            elif isinstance(
+                objeto,
+                ArchivoMAT
+            ):
 
                 archivo_mat = objeto
 
                 print(
-                    f"\nMAT activo: {nombre_seleccionado}"
+                    f"\nMAT activo: "
+                    f"{nombre_seleccionado}"
                 )
 
             else:
+
                 print(
-                    "\nEl objeto almacenado no corresponde "
-                    "a un tipo reconocido."
+                    "\nEl objeto almacenado "
+                    "no corresponde a un tipo reconocido."
                 )

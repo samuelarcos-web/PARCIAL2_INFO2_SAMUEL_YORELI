@@ -17,9 +17,9 @@ archivo_mat = None
 
 
 def mostrar_menu():
-    print("\n" + "=" * 50)
-    print("     SISTEMA DE PROCESAMIENTO EEG / ERP")
-    print("=" * 50)
+    print("\n" + "=" * 55)
+    print("        SISTEMA DE PROCESAMIENTO EEG / ERP")
+    print("=" * 55)
 
     print("\nARCHIVOS CSV")
     print("1. Cargar archivo CSV")
@@ -35,6 +35,10 @@ def mostrar_menu():
     print("9. Estadísticas de matriz 3D")
 
     print("\n0. Salir")
+
+    print("\nEjemplos de rutas:")
+    print("CSV: datos/Arch_CSV/ERP_01.csv")
+    print("MAT: datos/Archs_MAT/Sensitive_Cue.mat")
 
 
 while True:
@@ -52,7 +56,8 @@ while True:
     # ==========================================
 
     if opcion == 0:
-        print("\nPrograma finalizado.")
+        print("\nPrograma finalizado correctamente.")
+        print("Gracias por utilizar el sistema EEG / ERP.")
         break
 
     # ==========================================

@@ -1,9 +1,10 @@
+import os
 import pandas as pd
 import matplotlib.pyplot as plt
 from io import StringIO
 import numpy as np
 from scipy.io import loadmat, whosmat
-import os
+
 
 
 def suma(a, b, c, d):

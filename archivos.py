@@ -3,6 +3,7 @@ import os
 from clases import (
     ArchivoCSV,
     ArchivoMAT,
+    GestorArchivos,
     suma,
     resta,
     multiplicacion,
@@ -14,6 +15,8 @@ from clases import (
 
 archivo_csv = None
 archivo_mat = None
+
+gestor = GestorArchivos()
 
 
 def mostrar_menu():
@@ -40,6 +43,10 @@ def mostrar_menu():
     print("CSV: datos/Arch_CSV/ERP_01.csv")
     print("MAT: datos/Archs_MAT/Sensitive_Cue.mat")
 
+    print("\nGESTOR DE OBJETOS")
+    print("10. Listar objetos almacenados")
+    print("11. Buscar objeto por nombre")
+
 
 while True:
 
@@ -48,7 +55,7 @@ while True:
     opcion = validar_entero(
         "\nSeleccione una opción: ",
         0,
-        9
+        11
     )
 
     # ==========================================
@@ -76,6 +83,9 @@ while True:
         else:
             try:
                 archivo_csv = ArchivoCSV(ruta)
+
+                nombre = os.path.basename(ruta)
+                gestor.agregar(nombre, archivo_csv)
 
                 print(
                     "\nArchivo CSV cargado correctamente."
@@ -246,6 +256,9 @@ while True:
         else:
             try:
                 archivo_mat = ArchivoMAT(ruta)
+
+                nombre = os.path.basename(ruta)
+                gestor.agregar(nombre, archivo_mat)
 
                 print(
                     "\nArchivo MAT cargado correctamente."
@@ -421,3 +434,34 @@ while True:
                         "\nError al calcular estadísticas:",
                         error
                     )
+
+    # ==========================================
+    # LISTAR OBJETOS ALMACENADOS
+    # ==========================================
+
+    elif opcion == 10:
+
+        print("\n" + str(gestor))
+
+
+    # ==========================================
+    # BUSCAR OBJETO
+    # ==========================================
+
+    elif opcion == 11:
+
+        nombre = input(
+            "\nIngrese el nombre del objeto a buscar: "
+        ).strip()
+
+        objeto = gestor.buscar(nombre)
+
+        if objeto is None:
+            print("\nNo se encontró un objeto con ese nombre.")
+
+        else:
+            print("\nObjeto encontrado:")
+            print("Nombre:", nombre)
+            print("Tipo:", type(objeto).__name__)
+            print("\nInformación:")
+            print(objeto)

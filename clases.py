@@ -74,6 +74,38 @@ def validar_canal(nombre_canal, canales_disponibles):
 
     return nombre_canal
 
+class GestorArchivos:
+
+    def __init__(self):
+        self.objetos = {}
+
+    def agregar(self, nombre, objeto):
+        self.objetos[nombre] = objeto
+
+    def buscar(self, nombre):
+        if nombre in self.objetos:
+            return self.objetos[nombre]
+
+        return None
+
+    def listar(self):
+        return list(self.objetos.keys())
+
+    def __str__(self):
+        if not self.objetos:
+            return "No hay objetos almacenados."
+
+        texto = "OBJETOS ALMACENADOS\n"
+        texto += "-" * 30 + "\n"
+
+        for nombre, objeto in self.objetos.items():
+            texto += (
+                f"{nombre} -> "
+                f"{type(objeto).__name__}\n"
+            )
+
+        return texto
+
 class ArchivoCSV:
 
     def __init__(self, ruta):
@@ -451,4 +483,6 @@ class ArchivoMAT:
         plt.show()
 
         return promedio, desviacion
+
+
     

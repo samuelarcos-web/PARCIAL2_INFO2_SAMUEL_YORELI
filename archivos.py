@@ -7,7 +7,8 @@ from clases import (
     resta,
     multiplicacion,
     validar_entero,
-    validar_opcion
+    validar_opcion,
+    validar_canal_lista
 )
 
 
@@ -46,16 +47,22 @@ while True:
         9
     )
 
+    # ==========================================
     # SALIR
+    # ==========================================
+
     if opcion == 0:
         print("\nPrograma finalizado.")
         break
 
+    # ==========================================
     # CARGAR CSV
+    # ==========================================
+
     elif opcion == 1:
 
         ruta = input(
-        "\nIngrese la ruta del archivo CSV: "
+            "\nIngrese la ruta del archivo CSV: "
         ).strip()
 
         if not os.path.exists(ruta):
@@ -75,17 +82,24 @@ while True:
                     error
                 )
 
+    # ==========================================
     # INFORMACIÓN CSV
+    # ==========================================
+
     elif opcion == 2:
 
         if archivo_csv is None:
             print(
                 "\nPrimero debe cargar un archivo CSV."
             )
+
         else:
             print(archivo_csv)
 
+    # ==========================================
     # MOSTRAR CANALES CSV
+    # ==========================================
+
     elif opcion == 3:
 
         if archivo_csv is None:
@@ -99,7 +113,10 @@ while True:
             for canal in archivo_csv.mostrar_canales():
                 print("-", canal)
 
+    # ==========================================
     # GRÁFICOS CSV
+    # ==========================================
+
     elif opcion == 4:
 
         if archivo_csv is None:
@@ -120,34 +137,27 @@ while True:
                 3
             )
 
-            canal_stem = input(
-                "Canal para Stem: "
-            ).strip()
+            canal_stem = validar_canal_lista(
+                "Canal para Stem: ",
+                canales
+            )
 
-            canal_hist = input(
-                "Canal para Histograma: "
-            ).strip()
+            canal_hist = validar_canal_lista(
+                "Canal para Histograma: ",
+                canales
+            )
 
-            canal_x = input(
-                "Canal X para Scatter: "
-            ).strip()
+            canal_x = validar_canal_lista(
+                "Canal X para Scatter: ",
+                canales
+            )
 
-            canal_y = input(
-                "Canal Y para Scatter: "
-            ).strip()
+            canal_y = validar_canal_lista(
+                "Canal Y para Scatter: ",
+                canales
+            )
 
-            if (
-                canal_stem not in canales
-                or canal_hist not in canales
-                or canal_x not in canales
-                or canal_y not in canales
-            ):
-                print(
-                    "\nUno o más canales no son válidos."
-                )
-
-            else:
-
+            try:
                 archivo_csv.graficar_condicion(
                     condicion,
                     canal_stem,
@@ -156,7 +166,16 @@ while True:
                     canal_y
                 )
 
+            except Exception as error:
+                print(
+                    "\nError al generar los gráficos:",
+                    error
+                )
+
+    # ==========================================
     # DIFERENCIA INTERHEMISFÉRICA
+    # ==========================================
+
     elif opcion == 5:
 
         if archivo_csv is None:
@@ -171,40 +190,49 @@ while True:
             print("\nCanales disponibles:")
             print(", ".join(canales))
 
-            canal_izquierdo = input(
-                "Seleccione canal izquierdo: "
-            ).strip()
+            canal_izquierdo = validar_canal_lista(
+                "Seleccione canal izquierdo: ",
+                canales
+            )
 
-            canal_derecho = input(
-                "Seleccione canal derecho: "
-            ).strip()
+            canal_derecho = validar_canal_lista(
+                "Seleccione canal derecho: ",
+                canales
+            )
 
-            if (
-                canal_izquierdo not in canales
-                or canal_derecho not in canales
-            ):
+            if canal_izquierdo == canal_derecho:
                 print(
-                    "\nUno de los canales no existe."
+                    "\nDebe seleccionar dos canales diferentes."
                 )
 
             else:
 
-                resultado = (
-                    archivo_csv
-                    .diferencia_interhemisferica(
-                        canal_izquierdo,
-                        canal_derecho
+                try:
+                    resultado = (
+                        archivo_csv
+                        .diferencia_interhemisferica(
+                            canal_izquierdo,
+                            canal_derecho
+                        )
                     )
-                )
 
-                print("\nResultado:")
-                print(resultado.head())
+                    print("\nResultado:")
+                    print(resultado.head())
 
+                except Exception as error:
+                    print(
+                        "\nError al calcular la diferencia:",
+                        error
+                    )
+
+    # ==========================================
     # CARGAR MAT
+    # ==========================================
+
     elif opcion == 6:
 
         ruta = input(
-        "\nIngrese la ruta del archivo MAT: "
+            "\nIngrese la ruta del archivo MAT: "
         ).strip()
 
         if not os.path.exists(ruta):
@@ -224,7 +252,10 @@ while True:
                     error
                 )
 
+    # ==========================================
     # INFORMACIÓN MAT
+    # ==========================================
+
     elif opcion == 7:
 
         if archivo_mat is None:
@@ -235,7 +266,10 @@ while True:
         else:
             print(archivo_mat)
 
-    # OPERACIÓN MAT
+    # ==========================================
+    # OPERACIONES CON 4 CANALES MAT
+    # ==========================================
+
     elif opcion == 8:
 
         if archivo_mat is None:
@@ -245,9 +279,21 @@ while True:
 
         else:
 
+            cantidad_canales = (
+                archivo_mat.matriz_original.shape[0]
+            )
+
+            cantidad_muestras = (
+                archivo_mat.matriz_original.shape[1]
+            )
+
+            cantidad_epocas = (
+                archivo_mat.matriz_original.shape[2]
+            )
+
             print(
                 "\nNúmero de canales disponibles:",
-                archivo_mat.matriz_original.shape[0]
+                cantidad_canales
             )
 
             canales = []
@@ -257,7 +303,7 @@ while True:
                 canal = validar_entero(
                     f"Ingrese canal {i + 1}: ",
                     0,
-                    archivo_mat.matriz_original.shape[0] - 1
+                    cantidad_canales - 1
                 )
 
                 canales.append(canal)
@@ -265,54 +311,66 @@ while True:
             punto_min = validar_entero(
                 "Punto mínimo: ",
                 0,
-                archivo_mat.matriz_original.shape[1] - 1
+                cantidad_muestras - 1
             )
 
             punto_max = validar_entero(
                 "Punto máximo: ",
                 1,
-                archivo_mat.matriz_original.shape[1]
+                cantidad_muestras
             )
 
-            epoca = validar_entero(
-                "Seleccione época: ",
-                0,
-                archivo_mat.matriz_original.shape[2] - 1
-            )
+            if punto_min >= punto_max:
 
-            print("\nOperaciones disponibles:")
-            print("1. Suma")
-            print("2. Resta")
-            print("3. Multiplicación")
-
-            operacion = validar_opcion(
-                "Seleccione operación: ",
-                ["1", "2", "3"]
-            )
-
-            funciones = {
-                "1": suma,
-                "2": resta,
-                "3": multiplicacion
-            }
-
-            try:
-
-                archivo_mat.operar_canales(
-                    funciones[operacion],
-                    canales,
-                    punto_min,
-                    punto_max,
-                    epoca
-                )
-
-            except Exception as error:
                 print(
-                    "\nError:",
-                    error
+                    "\nEl punto mínimo debe ser "
+                    "menor al punto máximo."
                 )
 
-    # ESTADÍSTICAS MAT
+            else:
+
+                epoca = validar_entero(
+                    "Seleccione época: ",
+                    0,
+                    cantidad_epocas - 1
+                )
+
+                print("\nOperaciones disponibles:")
+                print("1. Suma")
+                print("2. Resta")
+                print("3. Multiplicación")
+
+                operacion = validar_opcion(
+                    "Seleccione operación: ",
+                    ["1", "2", "3"]
+                )
+
+                funciones = {
+                    "1": suma,
+                    "2": resta,
+                    "3": multiplicacion
+                }
+
+                try:
+
+                    archivo_mat.operar_canales(
+                        funciones[operacion],
+                        canales,
+                        punto_min,
+                        punto_max,
+                        epoca
+                    )
+
+                except Exception as error:
+                    print(
+                        "\nError en la operación:",
+                        error
+                    )
+
+    # ==========================================
+    # ESTADÍSTICAS MATRIZ 3D
+    # ==========================================
+
     elif opcion == 9:
 
         if archivo_mat is None:
@@ -338,15 +396,23 @@ while True:
                 2
             )
 
-            try:
+            if eje1 == eje2:
 
-                archivo_mat.estadisticas_3d(
-                    eje1,
-                    eje2
-                )
-
-            except Exception as error:
                 print(
-                    "\nError:",
-                    error
+                    "\nLos ejes deben ser diferentes."
                 )
+
+            else:
+
+                try:
+
+                    archivo_mat.estadisticas_3d(
+                        eje1,
+                        eje2
+                    )
+
+                except Exception as error:
+                    print(
+                        "\nError al calcular estadísticas:",
+                        error
+                    )

@@ -16,6 +16,23 @@ def resta(a, b, c, d):
 
 def multiplicacion(a, b, c, d):
     return a * b * c * d
+
+def validar_canal_lista(mensaje, canales_disponibles):
+    while True:
+        canal = input(mensaje).strip()
+
+        if canal in canales_disponibles:
+            return canal
+
+        print(
+            "Canal inválido. Canales disponibles:",
+            ", ".join(canales_disponibles)
+        )
+
+def validar_diferentes(valor1, valor2, mensaje):
+    if valor1 == valor2:
+        raise ValueError(mensaje)
+
 def validar_entero(mensaje, minimo=None, maximo=None):
     while True:
         try:

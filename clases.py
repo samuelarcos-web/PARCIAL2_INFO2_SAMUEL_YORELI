@@ -15,7 +15,45 @@ def resta(a, b, c, d):
 
 def multiplicacion(a, b, c, d):
     return a * b * c * d
+def validar_entero(mensaje, minimo=None, maximo=None):
+    while True:
+        try:
+            valor = int(input(mensaje))
 
+            if minimo is not None and valor < minimo:
+                print(f"El valor debe ser mayor o igual a {minimo}.")
+                continue
+
+            if maximo is not None and valor > maximo:
+                print(f"El valor debe ser menor o igual a {maximo}.")
+                continue
+
+            return valor
+
+        except ValueError:
+            print("Entrada inválida. Debe ingresar un número entero.")
+
+
+def validar_opcion(mensaje, opciones_validas):
+    while True:
+        opcion = input(mensaje).strip()
+
+        if opcion in opciones_validas:
+            return opcion
+
+        print(
+            "Opción inválida. Opciones permitidas:",
+            ", ".join(opciones_validas)
+        )
+
+
+def validar_canal(nombre_canal, canales_disponibles):
+    if nombre_canal not in canales_disponibles:
+        raise ValueError(
+            f"El canal '{nombre_canal}' no existe."
+        )
+
+    return nombre_canal
 
 class ArchivoCSV:
 
@@ -388,3 +426,4 @@ class ArchivoMAT:
         plt.show()
 
         return promedio, desviacion
+    

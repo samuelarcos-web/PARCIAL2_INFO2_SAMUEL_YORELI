@@ -47,6 +47,36 @@ def mostrar_menu():
     print("10. Listar objetos almacenados")
     print("11. Buscar objeto por nombre")
 
+def seleccionar_archivo(carpeta, extension):
+
+    archivos = [
+        archivo
+        for archivo in os.listdir(carpeta)
+        if archivo.lower().endswith(extension.lower())
+    ]
+
+    if not archivos:
+        print(f"\nNo se encontraron archivos {extension} en {carpeta}.")
+        return None
+
+    print("\nArchivos disponibles:")
+
+    for i, archivo in enumerate(archivos, start=1):
+        print(f"{i}. {archivo}")
+
+    opcion = validar_entero(
+        "Seleccione un archivo: ",
+        1,
+        len(archivos)
+    )
+
+    archivo_seleccionado = archivos[opcion - 1]
+
+    return os.path.join(
+        carpeta,
+        archivo_seleccionado
+    )
+
 
 while True:
 
@@ -73,14 +103,13 @@ while True:
 
     elif opcion == 1:
 
-        ruta = input(
-            "\nIngrese la ruta del archivo CSV: "
-        ).strip()
+        ruta = seleccionar_archivo(
+            "datos/Arch_CSV",
+            ".csv"
+        )
 
-        if not os.path.exists(ruta):
-            print("\nLa ruta indicada no existe.")
+        if ruta is not None:
 
-        else:
             try:
                 archivo_csv = ArchivoCSV(ruta)
 
@@ -246,14 +275,13 @@ while True:
 
     elif opcion == 6:
 
-        ruta = input(
-            "\nIngrese la ruta del archivo MAT: "
-        ).strip()
+        ruta = seleccionar_archivo(
+            "datos/Archs_MAT",
+            ".mat"
+        )
 
-        if not os.path.exists(ruta):
-            print("\nLa ruta indicada no existe.")
+        if ruta is not None:
 
-        else:
             try:
                 archivo_mat = ArchivoMAT(ruta)
 

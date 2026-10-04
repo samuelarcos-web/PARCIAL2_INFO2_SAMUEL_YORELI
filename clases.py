@@ -205,9 +205,13 @@ class ArchivoCSV:
 
         plt.tight_layout()
 
+        nombre_base = os.path.splitext(
+            os.path.basename(self.ruta)
+        )[0]
+
         nombre = (
-            f"graficos_condicion_{condicion}.png"
-        )
+            f"{nombre_base}_condicion_{condicion}.png"
+        )        
 
         os.makedirs("graficos", exist_ok=True)
 
@@ -392,9 +396,13 @@ class ArchivoMAT:
 
         plt.tight_layout()
 
+        nombre_base = os.path.splitext(
+            os.path.basename(self.ruta)
+        )[0]
+
         nombre_archivo = (
             f"graficos/"
-            f"MAT_{nombre_operacion}_epoca_{epoca}.png"
+            f"{nombre_base}_{nombre_operacion}_epoca_{epoca}.png"
         )
 
         os.makedirs("graficos", exist_ok=True)
@@ -468,9 +476,13 @@ class ArchivoMAT:
 
         plt.tight_layout()
 
+        nombre_base = os.path.splitext(
+            os.path.basename(self.ruta)
+        )[0]
+
         nombre_archivo = (
             f"graficos/"
-            f"MAT_estadisticas_ejes_{eje1}_{eje2}.png"
+            f"{nombre_base}_estadisticas_ejes_{eje1}_{eje2}.png"
         )
 
         os.makedirs("graficos", exist_ok=True)
